@@ -2,8 +2,14 @@ const getPosts = (req, res, next) => {
   res.status(200).json({
     posts: [
       {
+        _id: "1",
         title: "First Post",
         content: "This is my first post",
+        imageUrl: "images/kvak.png",
+        creator: {
+          name: "Max",
+        },
+        createdAt: new Date(),
       },
     ],
   });
