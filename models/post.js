@@ -16,7 +16,7 @@ const postSchema = new Schema(
       required: true,
     },
     creator: {
-      type: ObjectId,
+      type: Object,
       required: true,
     },
   },
