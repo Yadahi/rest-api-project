@@ -1,6 +1,9 @@
 const express = require("express");
 const feeRoutes = require("./routes/feed");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const credentials = require("./config/credentials");
+const MONGODB_URI = `mongodb+srv://${credentials.username}:${credentials.password}@cluster0.t5uhksi.mongodb.net/messages`;
 
 const app = express();
 
@@ -29,4 +32,11 @@ app.use((req, res, next) => {
 
 app.use("/feed", feeRoutes);
 
-app.listen(8080, () => console.log("Server running on port 8080"));
+mongoose
+  .connect(MONGODB_URI)
+  .then((result) => {
+    app.listen(8080);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
