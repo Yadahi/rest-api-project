@@ -4,10 +4,12 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const credentials = require("./config/credentials");
 const MONGODB_URI = `mongodb+srv://${credentials.username}:${credentials.password}@cluster0.t5uhksi.mongodb.net/messages`;
+const path = require("path");
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
   /** This sets the value of the Access-Control-Allow-Origin
@@ -31,6 +33,13 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feeRoutes);
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message: message });
+});
 
 mongoose
   .connect(MONGODB_URI)
