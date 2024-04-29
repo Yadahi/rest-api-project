@@ -21,18 +21,29 @@ const getPosts = (req, res, next) => {
 
 const createPost = (req, res, next) => {
   const errors = validationResult(req);
+  /** This error occurs when the data provided to the function fails validation checks.
+   * For example, if the title or content of the post doesn't meet certain criteria (e.g., length requirements, forbidden characters), it would result in a validation error. */
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed");
     error.statusCode = 422;
     throw error;
   }
+  /** This error occurs when the function expects an image file to be included in the request, but none is provided.
+   * In the context of this function, it implies that the post being created requires an associated image, and not providing one is considered an error.*/
+  if (!req.file) {
+    const error = new Error("No image provided");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
   // Create post in db
   const post = new Post({
     title: title,
     content: content,
-    imageUrl: "images/kvak.png",
+    imageUrl: imageUrl,
     creator: {
       name: "Max",
     },

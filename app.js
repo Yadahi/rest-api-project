@@ -5,10 +5,41 @@ const mongoose = require("mongoose");
 const credentials = require("./config/credentials");
 const MONGODB_URI = `mongodb+srv://${credentials.username}:${credentials.password}@cluster0.t5uhksi.mongodb.net/messages`;
 const path = require("path");
+const multer = require("multer");
 
 const app = express();
 
+/** This function initializes disk storage engine for multer. It takes an object as an argument containing configuration options.
+ * destination: This property specifies the directory where uploaded files will be stored.
+ * filename: This property specifies how uploaded files should be named.
+ */
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "-" + file.originalname);
+  },
+});
+
+/** The fileFilter function is a middleware function used to filter uploaded files based on their MIME types.
+ * It is typically used with multer, a Node.js middleware for handling multipart/form-data, which is commonly used for file uploads in web applications. */
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 app.use(bodyParser.json());
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
