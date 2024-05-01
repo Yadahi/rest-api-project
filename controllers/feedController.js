@@ -139,6 +139,30 @@ const updatePost = (req, res, next) => {
     });
 };
 
+const deletePost = (req, res, next) => {
+  const postId = req.params.postId;
+  Post.findById(postId)
+    .then((post) => {
+      // check logged in user
+      if (!post) {
+        const error = new Error("Could not find post");
+        error.statusCode = 404;
+        throw error;
+      }
+      clearImage(post.imageUrl);
+      return Post.findByIdAndRemove(postId);
+    })
+    .then((result) => {
+      res.status(200).json({ message: "Post deleted" });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 /**
  * Deletes the image file at the specified file path.
  *
@@ -150,4 +174,4 @@ const clearImage = (filePath) => {
   fs.unlink(filePath, (err) => console.log(err));
 };
 
-module.exports = { getPosts, createPost, getPost, updatePost };
+module.exports = { getPosts, createPost, getPost, updatePost, deletePost };
