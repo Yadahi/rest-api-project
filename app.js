@@ -1,5 +1,8 @@
 const express = require("express");
+
 const feeRoutes = require("./routes/feed");
+const authRoutes = require("./routes/auth");
+
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const credentials = require("./config/credentials");
@@ -64,12 +67,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feeRoutes);
+app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
-  res.status(status).json({ message: message });
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose
