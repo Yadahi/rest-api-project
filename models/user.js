@@ -16,7 +16,7 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    required: true,
+    default: "I am new",
   },
   /** ref: "Post": This specifies the model that the ObjectId refers to. In this case, it's referencing the Post model.
    * When Mongoose sees this reference, it understands that the posts array will contain ObjectIds that correspond to documents in the Post collection. */
