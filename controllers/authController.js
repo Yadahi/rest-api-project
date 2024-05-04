@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const credentials = require("../config/credentials");
 
 const { validationResult } = require("express-validator");
 
@@ -66,7 +67,7 @@ const login = (req, res, next) => {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
-        "secret",
+        credentials.jwtSecret,
         { expiresIn: "1h" }
       );
       res.status(200).json({ token: token, userId: loadedUser._id.toString() });
