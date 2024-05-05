@@ -37,7 +37,7 @@ const getPosts = (req, res, next) => {
 };
 
 const createPost = (req, res, next) => {
-  console.log(req);
+  console.log("BODY", req.file);
   const errors = validationResult(req);
   /** This error occurs when the data provided to the function fails validation checks.
    * For example, if the title or content of the post doesn't meet certain criteria (e.g., length requirements, forbidden characters), it would result in a validation error. */
@@ -142,7 +142,11 @@ const updatePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Not authorized");
+        error.statusCode = 403;
+        throw error;
+      }
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
@@ -172,6 +176,11 @@ const deletePost = (req, res, next) => {
       if (!post) {
         const error = new Error("Could not find post");
         error.statusCode = 404;
+        throw error;
+      }
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Not authorized");
+        error.statusCode = 403;
         throw error;
       }
       clearImage(post.imageUrl);
