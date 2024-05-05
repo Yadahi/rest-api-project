@@ -187,6 +187,15 @@ const deletePost = (req, res, next) => {
       return Post.findByIdAndRemove(postId);
     })
     .then((result) => {
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      /**The pull() method in Mongoose is used to remove a specific item from an array.
+       * In the provided code, user.posts.pull(postId) removes the postId from the posts array of the user document. */
+      user.posts.pull(postId);
+      return user.save();
+    })
+    .then((result) => {
       res.status(200).json({ message: "Post deleted" });
     })
     .catch((err) => {
