@@ -2,6 +2,7 @@ const express = require("express");
 
 const feeRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
+const statusRoutes = require("./routes/status");
 
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -68,6 +69,7 @@ app.use((req, res, next) => {
 
 app.use("/feed", feeRoutes);
 app.use("/auth", authRoutes);
+app.use("/status", statusRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
