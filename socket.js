@@ -1,5 +1,3 @@
-const { get } = require("mongoose");
-
 let io;
 
 module.exports = {
