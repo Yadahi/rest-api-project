@@ -17,7 +17,6 @@ const getPosts = async (req, res, next) => {
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
-    console.log("posts", posts);
     res.status(200).json({
       message: "Fetched posts successfully.",
       posts: posts,
@@ -32,7 +31,6 @@ const getPosts = async (req, res, next) => {
 };
 
 const createPost = async (req, res, next) => {
-  console.log("BODY", req.file);
   const errors = validationResult(req);
   /** This error occurs when the data provided to the function fails validation checks.
    * For example, if the title or content of the post doesn't meet certain criteria (e.g., length requirements, forbidden characters), it would result in a validation error. */
