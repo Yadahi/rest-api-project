@@ -74,6 +74,20 @@ app.use(
     schema: graphqlSchema,
     rootValue: graphqlResolver,
     graphiql: true,
+    /**
+     * The originalError property holds the original error object that you've thrown somewhere in your
+     * application within your GraphQL resolver functions or other related logic. This allows you to
+     * handle and customize errors in a more granular way, providing richer error messages or additional data if needed.
+     */
+    formatError: (error) => {
+      if (!error.originalError) {
+        return error;
+      }
+      const data = error.originalError.data;
+      const message = error.message || "An error occurred.";
+      const code = error.originalError.code || 500;
+      return { message: message, status: code, data: data };
+    },
   })
 );
 
