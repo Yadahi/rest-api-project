@@ -65,6 +65,9 @@ app.use((req, res, next) => {
    * response header to specify the headers that are allowed in a
    * preflight request. In this case, it allows Content-Type and Authorization headers. */
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
   next();
 });
 
