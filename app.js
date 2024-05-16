@@ -65,6 +65,12 @@ app.use((req, res, next) => {
    * response header to specify the headers that are allowed in a
    * preflight request. In this case, it allows Content-Type and Authorization headers. */
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  /** This conditional statement checks if the incoming request method is OPTIONS.
+   * OPTIONS is an HTTP method used to check what methods are supported by the server.
+   * If the request method is OPTIONS, it immediately sends a response with status code 200 (OK).
+   * This is typically done to handle preflight requests in CORS, where the browser
+   * sends an OPTIONS request to check the CORS policy before making the actual request. */
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
@@ -82,7 +88,7 @@ app.use(
      * application within your GraphQL resolver functions or other related logic. This allows you to
      * handle and customize errors in a more granular way, providing richer error messages or additional data if needed.
      */
-    formatError: (error) => {
+    customFormatErrorFn: (error) => {
       if (!error.originalError) {
         return error;
       }
