@@ -57,10 +57,15 @@ module.exports = {
       error.code = 401;
       throw error;
     }
-    return {
-      token: jwt.sign({ userId: user._id, email: user.email }, jwtSecret, {
+    const token = jwt.sign(
+      { userId: user._id.toString(), email: user.email },
+      credentials.jwtSecret,
+      {
         expiresIn: "1h",
-      }),
+      }
+    );
+    return {
+      token: token,
       userId: user._id.toString(),
     };
   },
