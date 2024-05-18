@@ -72,6 +72,7 @@ module.exports = {
   },
 
   createPost: async function ({ postInput }, req) {
+    console.log(postInput);
     if (!req.isAuth) {
       const error = new Error("Unauthenticated!");
       error.code = 401;
@@ -110,7 +111,7 @@ module.exports = {
     });
     const createPost = await post.save();
     user.posts.push(createPost);
-
+    await user.save();
     return {
       ...createPost._doc,
       _id: createPost.id.toString(),
