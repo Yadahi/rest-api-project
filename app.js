@@ -7,6 +7,7 @@ const MONGODB_URI = `mongodb+srv://${credentials.username}:${credentials.passwor
 const path = require("path");
 const multer = require("multer");
 const { graphqlHTTP } = require("express-graphql");
+const auth = require("./middleware/auth");
 
 // GraphQL
 const graphqlSchema = require("./graphql/schema");
@@ -76,6 +77,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(auth);
 
 app.use(
   "/graphql",
