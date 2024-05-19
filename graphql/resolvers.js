@@ -72,7 +72,6 @@ module.exports = {
   },
 
   createPost: async function ({ postInput }, req) {
-    console.log(postInput);
     if (!req.isAuth) {
       const error = new Error("Unauthenticated!");
       error.code = 401;
@@ -141,6 +140,6 @@ module.exports = {
         updatedAt: post._doc.updatedAt.toISOString(),
       };
     });
-    return { listPosts: listPosts, totalPosts: totalPosts };
+    return { posts: listPosts, totalPosts: totalPosts };
   },
 };
