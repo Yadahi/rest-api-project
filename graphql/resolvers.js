@@ -150,4 +150,24 @@ module.exports = {
     });
     return { posts: listPosts, totalPosts: totalPosts };
   },
+
+  getPost: async function ({ postId }, req) {
+    if (!req.isAuth) {
+      const error = new Error("Unauthenticated!");
+      error.code = 401;
+      throw error;
+    }
+    const post = await Post.findById(postId).populate("creator");
+    if (!post) {
+      const error = new Error("No post found!");
+      error.code = 404;
+      throw error;
+    }
+    return {
+      ...post._doc,
+      _id: post.id.toString(),
+      createdAt: post._doc.createdAt.toISOString(),
+      updatedAt: post._doc.updatedAt.toISOString(),
+    };
+  },
 };
