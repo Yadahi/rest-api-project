@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const credentials = require("../config/credentials");
 const Post = require("../models/post");
 const { clearImage } = require("../util/file");
+const { updateStatus } = require("../controllers/statusController");
+const user = require("../models/user");
 
 module.exports = {
   /**
@@ -245,5 +247,43 @@ module.exports = {
     user.posts.pull(postId);
     await user.save();
     return true;
+  },
+
+  user: async function (args, req) {
+    if (!req.isAuth) {
+      const error = new Error("Unauthenticated!");
+      error.code = 401;
+      throw error;
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      const error = new Error("Could not find user!");
+      error.code = 404;
+      throw error;
+    }
+    return {
+      ...user._doc,
+      _id: user.id.toString(),
+    };
+  },
+
+  updateStatus: async function ({ status }, req) {
+    if (!req.isAuth) {
+      const error = new Error("Unauthenticated!");
+      error.code = 401;
+      throw error;
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      const error = new Error("Could not find user!");
+      error.code = 404;
+      throw error;
+    }
+    user.status = status;
+    await user.save();
+    return {
+      ...user._doc,
+      _id: user.id.toString(),
+    };
   },
 };
